@@ -8,6 +8,11 @@ from datetime import datetime
 import os
 # Importar imágenes para la app
 from PIL import Image
+#Envío de mails
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 
 # --- CONFIGURACIÓN DE LA PÁGINA ---
 st.set_page_config(page_title="Seguimiento de Obra")
@@ -83,6 +88,38 @@ if enviar_datos:
 st.divider()
 st.subheader("Gestión de Reportes")
 
+def enviar_correo(archivo_adjunto):
+    try:
+        # Extraer datos de los Secrets
+        remitente = st.secrets["email"]["user"]
+        password = st.secrets["email"]["password"]
+        destinatario = st.secrets["email"]["receiver"]
+
+        # Crear el mensaje
+        msg = MIMEMultipart()
+        msg['From'] = remitente
+        msg['To'] = destinatario
+        msg['Subject'] = f"Reporte de Obra - {datetime.now().strftime('%d/%m/%Y')}"
+
+        # Adjuntar el archivo Excel
+        part = MIMEBase('application', 'octet-stream')
+        with open(archivo_adjunto, "rb") as file:
+            part.set_payload(file.read())
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition', f"attachment; filename={archivo_adjunto}")
+        msg.attach(part)
+
+        # Conexión con el servidor SMTP de Gmail
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(remitente, password)
+        server.send_message(msg)
+        server.quit()
+        return True
+    except Exception as e:
+        st.error(f"Error técnico: {e}")
+        return False
+
 if os.path.exists(archivo_datos):
     df_total = pd.read_csv(archivo_datos)
     st.write("Vista previa de los últimos registros:")
@@ -102,10 +139,15 @@ if os.path.exists(archivo_datos):
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 
-    # Botón para simular envío por correo
-    if st.button("📧 Enviar Excel a la empresa"):
-        # Aquí iría la lógica de SMTP (Gmail/Outlook)
-        # Por seguridad, Streamlit Cloud requiere configurar 'secrets' para las contraseñas
-        st.info("Función de envío activada. (Requiere configuración de servidor SMTP en Secrets)")
-else:
-    st.info("Aún no hay registros guardados.")
+    # Botón para envío por correo
+   if st.button("📧 Enviar Excel al Jefe de Turno"):
+    if os.path.exists("registros_obra.csv"):
+        # Convertimos el CSV actual a Excel para que el jefe lo vea bien
+        nombre_excel = "reporte_obra.xlsx"
+        pd.read_csv("registros_obra.csv").to_excel(nombre_excel, index=False)
+        
+        with st.spinner("Enviando correo..."):
+            if enviar_correo(nombre_excel):
+                st.success(f"✅ ¡Correo enviado con éxito a {st.secrets['email']['receiver']}!")
+    else:
+        st.error("No hay datos guardados para enviar.")
