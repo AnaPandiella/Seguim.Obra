@@ -24,7 +24,7 @@ st.image(imagen2, caption='Logo Masaveu', use_container_width=True)
 with st.form("formulario_obra", clear_on_submit=True):
     st.subheader("Nuevo Registro")
     
-    nombre_trabajador = st.text_input("Nombre del Trabajador")
+    Nombre_Trabajador = st.text_input("Nombre del Trabajador")
     
     Tarea = st.selectbox("Seleccione la Tarea", [
         "Trazado y marcado de cajas, tubos y cuadros", 
@@ -64,9 +64,9 @@ archivo_datos = "registros_obra.csv"
 if enviar_datos:
     nuevo_registro = {
         "Fecha": Fecha.strftime("%d/%m/%Y"),
-        "Trabajador": nombre_trabajador,
-        "Tarea": tarea,
-        "Estado": estado
+        "Trabajador": Nombre_Trabajador,
+        "Tarea": Tarea,
+        "Estado": Estado
     }
     
     df = pd.DataFrame([nuevo_registro])
