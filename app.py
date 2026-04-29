@@ -140,7 +140,7 @@ if os.path.exists(archivo_datos):
     )
 
     # Botón para envío por correo
-   if st.button("📧 Enviar Excel al Jefe de Turno"):
+if st.button("📧 Enviar Excel a empresa"):
     if os.path.exists("registros_obra.csv"):
         # Convertimos el CSV actual a Excel para que el jefe lo vea bien
         nombre_excel = "reporte_obra.xlsx"
