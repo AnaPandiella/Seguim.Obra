@@ -1,7 +1,13 @@
+# Streamlit cloud: marco de trabajo donde crear la app del móvil
 import streamlit as st
+# Pandas: libreria para manejo y tratamiento de datos. Permite trabajo con excel
 import pandas as pd
+# Calendario
 from datetime import datetime
+#os: módulo para interaccionar con Windows, Lynux o macOS
 import os
+# Importar imágenes para la app
+from PIL import Image
 
 # --- CONFIGURACIÓN DE LA PÁGINA ---
 st.set_page_config(page_title="Seguimiento de Obra")
