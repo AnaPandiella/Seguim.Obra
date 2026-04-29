@@ -63,7 +63,7 @@ archivo_datos = "registros_obra.csv"
 
 if enviar_datos:
     nuevo_registro = {
-        "Fecha": fecha,
+        "Fecha": fecha.strftime('%Y-%m-%d'),
         "Trabajador": nombre_trabajador,
         "Tarea": tarea,
         "Estado": estado
