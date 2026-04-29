@@ -52,6 +52,9 @@ with st.form("formulario_obra", clear_on_submit=True):
     ])
     
     Estado = st.selectbox("Estado de la Tarea", [
+        "Avance de la tarea entorno al 25% aprox.",
+        "Avance de la tarea entorno al 50% aprox.",
+        "Avance de la tarea entorno al 75% aprox.",
         "OK, finalizado sin errores", 
         "Finalizado, pero con errores pendientes de corregir", 
         "Finalizado y corregidos los errores"
